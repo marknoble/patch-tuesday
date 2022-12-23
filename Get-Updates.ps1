@@ -39,7 +39,7 @@ Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -
 Write-Output "Updating Visual Studio Code..."
 Invoke-Expression "winget --version"
 if ($?) {
-   Invoke-Expression "winget upgrade Microsoft.VisualStudioCode"
+   Invoke-Expression "winget upgrade Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements"
 } else {
    Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Winget not found, installing Winget..." -Category 8
    Write-Output "Winget not found, installing Winget..."
