@@ -31,7 +31,8 @@ Write-Output "Updating Visual Studio $VSEdition..."
 
 cd $VSBootstrapperPath
 Invoke-Expression ".\vs_$VSEdition.exe --update --noweb --all?"
-Invoke-Expression ".\vs_$VSEdition.exe update --installPath C:\Program Files\Microsoft Visual Studio\$VSVersion\$VSEdition\ --quiet"
+Invoke-Expression ".\vs_$VSEdition.exe update --installPath C:\Program Files\Microsoft Visual Studio\$VSVersion\$VSFolder\ --quiet"
+cd $location
 
 # Update Visual Studio Code
 Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Updating VS Code..." -Category 8
@@ -52,8 +53,6 @@ if (Test-Path "C:\'Program Files\Azure Data Studio'\azuredatastudio.exe") {
    Write-Output "Updating Azure Data Studio..."
    Get-Command C:\'Program Files\Azure Data Studio'\azuredatastudio.exe --update
 }
-
-cd $location
 
 # Update Windows Store Apps
 Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Updating Windows Store..." -Category 8
