@@ -14,7 +14,6 @@ else
 {
     $VSFolder = $VSEdition
 }
-cls
 
 Write-Output "Sample parameters: .\Get-Updates.ps1 -VSVersion 2022 -VSEdition Preview/Community/Professional/Enterprise"
 Write-Output ""
