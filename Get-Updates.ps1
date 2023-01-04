@@ -7,7 +7,7 @@
 $location = Get-Location
 $computer = $env:COMPUTERNAME
 $VSBootstrapperPath = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
-if ($VSEdition = "Community") {
+if ($VSEdition -eq "Community") {
     $VSFolder = "Preview"    
 }
 else
