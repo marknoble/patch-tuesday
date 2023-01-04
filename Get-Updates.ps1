@@ -1,6 +1,6 @@
 ﻿param (
    [int] $VSVersion,
-   [string] $VSEdition #Preview, Community, Professional, Enterprise
+   [string] $VSEdition #Community, Professional, Enterprise
 )
 
 # Patch Tuesday
@@ -15,7 +15,7 @@ else
     $VSFolder = $VSEdition
 }
 
-Write-Output "Sample parameters: .\Get-Updates.ps1 -VSVersion 2022 -VSEdition Preview/Community/Professional/Enterprise"
+Write-Output "Sample parameters: .\Get-Updates.ps1 -VSVersion 2022 -VSEdition Community/Professional/Enterprise"
 Write-Output ""
 Write-Output "To function properly this script requires Boostrappers to be instlled at" 
 Write-Output "$VSBootStrapperPath."
