@@ -6,7 +6,7 @@
 # Patch Tuesday
 $location = Get-Location
 $computer = $env:COMPUTERNAME
-$VSBootstrapperPath = "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
+$VSBootstrapperPath = "C:\Users\Public\PS\Bootstrappers"
 if ($VSEdition -eq "Community") {
     $VSFolder = "Preview"    
 }
