@@ -8,11 +8,29 @@ $location = Get-Location
 $computer = $env:COMPUTERNAME
 $VSBootstrapperPath = "C:\Users\Public\PS\Bootstrappers"
 if ($VSEdition -eq "Community") {
-    $VSFolder = "Preview"    
+   $VSFolder = "Preview"    
 }
-else
-{
-    $VSFolder = $VSEdition
+else {
+   $VSFolder = $VSEdition
+}
+
+function Log {
+   param (
+      [Parameter(Mandatory = $true)]
+      [string]$Message
+   )
+
+   # Logging Setup
+   $source = "PowerShell"
+   $logName = "Windows Powershell"
+   $eventID = 600
+   $entryType = [System.Diagnostics.EventLogEntryType]::Information
+   $category = 8
+
+   [System.Diagnostics.EventLog]::SourceExists($source) | Out-Null
+   $eventLog = New-Object System.Diagnostics.EventLog($logName)
+   $eventLog.Source = $source
+   $eventLog.WriteEntry($Message, $entryType, $eventID, $category)
 }
 
 Write-Output "Sample parameters: .\Get-Updates.ps1 -VSVersion 2022 -VSEdition Community/Professional/Enterprise"
@@ -26,22 +44,23 @@ Write-Output "Bootstrappers: https://learn.microsoft.com/en-us/visualstudio/inst
 Write-Output ""
 
 # Update Visual Studio
-Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Updating VS $VSEdition..." -Category 8
+Log "Updating Visual Studio $VSEdition..."
 Write-Output "Updating Visual Studio $VSEdition..."
 
-cd $VSBootstrapperPath
+Set-Location $VSBootstrapperPath
 Invoke-Expression ".\vs_$VSEdition.exe --update --noweb --all?"
 Invoke-Expression ".\vs_$VSEdition.exe update --installPath C:\Program Files\Microsoft Visual Studio\$VSVersion\$VSFolder\ --quiet"
-cd $location
+Set-Location $location
 
 # Update Visual Studio Code
-Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Updating VS Code..." -Category 8
+Log "Updating VS Code..."
 Write-Output "Updating Visual Studio Code..."
 Invoke-Expression "winget --version"
 if ($?) {
    Invoke-Expression "winget upgrade Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements"
-} else {
-   Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Winget not found, installing Winget..." -Category 8
+}
+else {
+   Log "Winget not found, installing Winget..."
    Write-Output "Winget not found, installing Winget..."
    Invoke-Expression "winget install Microsoft.Winget"
 }
@@ -49,17 +68,14 @@ if ($?) {
 # Update Azure Data Studio If Installed
 if (Test-Path "C:\'Program Files\Azure Data Studio'\azuredatastudio.exe") {
    # If the command is found, run it
-   Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Opening Azure Data Studio..." -Category 8
+   Log "Updating Azure Data Studio..."
    Write-Output "Updating Azure Data Studio..."
    Get-Command C:\'Program Files\Azure Data Studio'\azuredatastudio.exe --update
 }
 
 # Update Windows Store Apps
-Write-EventLog -LogName "Windows Powershell" -Source "PowerShell" -EventId 600 -EntryType Information -Message "Updating Windows Store..." -Category 8
+Log "Updating Windows Store Apps..."
 Write-Output "Updating Windows Store Apps..."
-$namespaceName = "root\cimv2\mdm\dmmap"
-$className = "MDM_EnterpriseModernAppManagement_AppManagement01"
-$wmiObj = Get-WmiObject -Namespace $namespaceName -Class $className
-$result = $wmiObj.UpdateScanMethod()
+winget upgrade --all --accept-package-agreements
 
 Write-Output "Update complete."
